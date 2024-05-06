@@ -9,5 +9,6 @@ import Foundation
 
 //ToDo: Move Strings to constants, and create classes or structs if safe
 
-let apiUrlString = "https://acharyaprashant.org/api/v2/content/misc/media-coverages?limit=100"
+let apiUrlString = "https://acharyaprashant.org/api/v2/content/misc/media-coverages?limit=390"
+//ToDo: Set limit to 100 after testing
 

@@ -52,12 +52,12 @@ extension ViewController: UICollectionViewDelegate {
 extension ViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return thumbnailViewModel.images.count
+        return thumbnailViewModel.imageUrls.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PACollectionViewCell.identifier, for: indexPath) as! PACollectionViewCell
-        cell.confgure(with: thumbnailViewModel.images[indexPath.item]!)
+        cell.configure(with: thumbnailViewModel.imageUrls[indexPath.item])
         return cell
     }
     

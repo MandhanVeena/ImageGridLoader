@@ -26,8 +26,10 @@ class PACollectionViewCell: UICollectionViewCell {
         imageView.layer.masksToBounds = true
     }
 
-    public func confgure(with image: UIImage) {
-        imageView.image = image
+    public func configure(with imageUrl: String) {
+        if let url = URL(string: imageUrl) {
+            imageView.loadImage(url: url)
+        }
     }
     
     static func nib() -> UINib{

@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 class PAThumbnailViewModel {
-    var images = [UIImage?]()
+    var imageUrls = [String]()
     
     func fetchImageData(completion: @escaping (Bool) -> Void) {
         guard let apiUrl = URL(string: apiUrlString) else {
@@ -29,9 +29,9 @@ class PAThumbnailViewModel {
                 // Parse JSON response
                 let jsonArray = try JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]]
                 
-                // Extract image URLs from the JSON response and load images
-                self?.loadImages(from: jsonArray, completion: completion)
-                
+                // Extract image URLs from the JSON response
+                self?.extractImageUrls(from: jsonArray)
+                completion(true)
             } catch {
                 print("Error parsing JSON: \(error.localizedDescription)")
                 completion(false)
@@ -41,7 +41,7 @@ class PAThumbnailViewModel {
         task.resume()
     }
     
-    func loadImages(from jsonArray: [[String: Any]]?, completion: @escaping (Bool) -> Void) {
+    func extractImageUrls(from jsonArray: [[String: Any]]?) {
         guard let jsonArray = jsonArray else { return }
         
         for dict in jsonArray {
@@ -51,29 +51,8 @@ class PAThumbnailViewModel {
                let key = thumbnail["key"] as? String {
                 let imageUrl = "\(domain)/\(basePath)/0/\(key)"
                 
-                // Load images asynchronously
-                self.loadImage(from: imageUrl, completion: completion)
+                self.imageUrls.append(imageUrl)
             }
         }
     }
-    
-    func loadImage(from urlString: String, completion: @escaping (Bool) -> Void) {
-        guard let url = URL(string: urlString) else {
-            completion(false)
-            return
-        }
-        
-        URLSession.shared.dataTask(with: url) { [weak self] (data, _, error) in
-            guard let data = data, error == nil, let image = UIImage(data: data) else {
-                print("Failed to load image from URL: \(urlString)")
-                return
-            }
-            // ToDo: Check Signal signout error if any
-            // Update the images array with the loaded image
-            self?.images.append(image)
-            
-            completion(true)
-        }.resume()
-    }
-    
 }
