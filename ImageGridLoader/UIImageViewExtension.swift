@@ -8,11 +8,18 @@
 import Foundation
 import UIKit
 
-extension UIImageView {
+class AsyncImageView: UIImageView {
+    
+    var task: URLSessionDataTask!
+    
     func loadImage(url: URL) {
         image = nil
         
-        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+        if let task = task {
+            task.cancel()
+        }
+        
+        task = URLSession.shared.dataTask(with: url) { data, response, error in
             guard let data = data, let newImage = UIImage(data: data) else {
                 print("Couldn't load image from url: \(url)")
                 return

@@ -9,7 +9,7 @@ import UIKit
 
 class PACollectionViewCell: UICollectionViewCell {
 
-    @IBOutlet var imageView: UIImageView!
+    @IBOutlet var imageView: AsyncImageView!
     
     static let identifier = "PACollectionViewCell"
     
