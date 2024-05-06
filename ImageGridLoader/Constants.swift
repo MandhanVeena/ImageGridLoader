@@ -1,0 +1,13 @@
+//
+//  Constants.swift
+//  ImageGridLoader
+//
+//  Created by Veena on 06/05/24.
+//
+
+import Foundation
+
+//ToDo: Move Strings to constants, and create classes or structs if safe
+
+let apiUrlString = "https://acharyaprashant.org/api/v2/content/misc/media-coverages?limit=100"
+
