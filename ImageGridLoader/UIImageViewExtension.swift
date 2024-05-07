@@ -5,59 +5,45 @@
 //  Created by Veena on 07/05/24.
 //
 
-import Foundation
 import UIKit
 
 class AsyncImageView: UIImageView {
     
-    let imageCache = NSCache<NSString, UIImage>()
+    private let imageCache = NSCache<NSString, UIImage>()
+    private var task: URLSessionDataTask?
     
-    var task: URLSessionDataTask!
-    var placeholderImage: UIImage!
+    var placeholderImage: UIImage? = UIImage(systemName: "photo.fill")?
+        .withTintColor(.lightGray)
+        .withRenderingMode(.alwaysOriginal)
+        .withConfiguration(UIImage.SymbolConfiguration(scale: .small))
     
-    func loadImage(url: URL) {
-
-        if placeholderImage == nil {
-            placeholderImage = createPlaceHolder()
-        }
-        
+    func loadImage(from url: URL) {
         image = placeholderImage
         
-        if let task = task {
-            task.cancel()
-        }
+        // Cancel ongoing task if any
+        task?.cancel()
         
-        if let imageFromCache = imageCache.object(forKey: url.absoluteString as NSString) {
-            self.image = imageFromCache
-            print("From cache")
+        // Check cache
+        if let cachedImage = imageCache.object(forKey: url.absoluteString as NSString) {
+            self.image = cachedImage
+            print("Image loaded from cache")
             return
         }
         
-        task = URLSession.shared.dataTask(with: url) { data, response, error in
-            guard let data = data, let newImage = UIImage(data: data) else {
-                print("Couldn't load image from url: \(url)")
+        // Fetch image from URL
+        task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+            guard let self = self, let data = data, let newImage = UIImage(data: data) else {
+                print("Error loading image from url: \(url), error: \(error?.localizedDescription ?? "Unknown error")")
                 return
             }
-            
             print("From API")
+            // Cache the image
             self.imageCache.setObject(newImage, forKey: url.absoluteString as NSString)
             
             DispatchQueue.main.async {
                 self.image = newImage
             }
         }
-        task.resume()
-    }
-    
-    func createPlaceHolder() -> UIImage{
-        let img = UIImage(systemName: "photo.fill")!
-        
-        // Change color to system red and apply small size configuration
-        let smallConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .ultraLight, scale: .small)
-        
-        let smallRedImage = img.withTintColor(.lightGray, renderingMode: .alwaysOriginal)
-            .withConfiguration(smallConfig)
-        
-        return smallRedImage
+        task?.resume()
     }
 }

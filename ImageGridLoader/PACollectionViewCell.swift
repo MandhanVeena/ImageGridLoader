@@ -28,7 +28,7 @@ class PACollectionViewCell: UICollectionViewCell {
 
     public func configure(with imageUrl: String) {
         if let url = URL(string: imageUrl) {
-            imageView.loadImage(url: url)
+            imageView.loadImage(from: url)
         }
     }
     
