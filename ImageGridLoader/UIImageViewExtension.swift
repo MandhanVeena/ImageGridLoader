@@ -33,6 +33,8 @@ class AsyncImageView: UIImageView {
         .withConfiguration(UIImage.SymbolConfiguration(pointSize: 15, weight: .ultraLight, scale: .small))
     
     
+    // MARK: - Public Method
+    
     /// Function to load image asynchronously from memory cache, if not found, tries disk cache, else fetches from server
     /// - Parameter url: The URL of the image to be loaded.
     func loadImage(from url: URL) {
@@ -61,18 +63,19 @@ class AsyncImageView: UIImageView {
                 print("Error loading image from url: \(url), error: \(error?.localizedDescription ?? "Unknown error")")
                 return
             }
-            print("Image loaded from API")
+            print("Image loaded from URL")
             
             displayImage(newImage)
             
-            // Update memory cache
             self.saveToMemoryCache(newImage, for: url)
             
-            // Save image to disk cache
             self.saveToDiskCache(newImage, with: url)
         }
         task?.resume()
     }
+    
+    
+    // MARK: - Private Methods
     
     private func displayImage(_ cachedImage: UIImage) {
         DispatchQueue.main.async {
@@ -80,6 +83,7 @@ class AsyncImageView: UIImageView {
         }
     }
 
+    
     private func loadFromMemoryCache(with url: URL) -> UIImage? {
         return imageMemoryCache.object(forKey: url.absoluteString as NSString)
     }
@@ -87,6 +91,7 @@ class AsyncImageView: UIImageView {
     private func saveToMemoryCache(_ image: UIImage, for url: URL) {
         imageMemoryCache.setObject(image, forKey: url.absoluteString as NSString)
     }
+    
     
     private func loadFromDiskCache(with url: URL) -> UIImage? {
         let imagePath = imageDiskCacheDirectory.appendingPathComponent(url.pathComponents[2])
