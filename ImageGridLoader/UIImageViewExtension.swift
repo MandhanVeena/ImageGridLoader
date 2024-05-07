@@ -11,9 +11,15 @@ import UIKit
 class AsyncImageView: UIImageView {
     
     var task: URLSessionDataTask!
+    var placeholderImage: UIImage!
     
     func loadImage(url: URL) {
-        image = nil
+
+        if placeholderImage == nil {
+            placeholderImage = createPlaceHolder()
+        }
+        
+        image = placeholderImage
         
         if let task = task {
             task.cancel()
@@ -30,5 +36,17 @@ class AsyncImageView: UIImageView {
             }
         }
         task.resume()
+    }
+    
+    func createPlaceHolder() -> UIImage{
+        let img = UIImage(systemName: "photo.fill")!
+        
+        // Change color to system red and apply small size configuration
+        let smallConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .ultraLight, scale: .small)
+        
+        let smallRedImage = img.withTintColor(.lightGray, renderingMode: .alwaysOriginal)
+            .withConfiguration(smallConfig)
+        
+        return smallRedImage
     }
 }
