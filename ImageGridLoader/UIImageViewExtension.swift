@@ -8,18 +8,17 @@
 import UIKit
 
 class AsyncImageView: UIImageView {
+    /// Data task to fetch the image from specified URL asynchronously.
+    private var task: URLSessionDataTask?
     
     private let imageMemoryCache = NSCache<NSString, UIImage>()
     
     private let imageDiskCacheDirectory: URL = {
-        // Directory path for storing cached images
         guard let cacheDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first else {
             fatalError("Unable to access cache directory")
         }
-        // Append directory name
         let directoryURL = cacheDirectory.appendingPathComponent("PAImageCache")
         
-        // Creating cache directory if it doesn't exist
         do {
             try FileManager.default.createDirectory(at: directoryURL, withIntermediateDirectories: true, attributes: nil)
         } catch {
@@ -28,28 +27,30 @@ class AsyncImageView: UIImageView {
         return directoryURL
     }()
     
-    private var task: URLSessionDataTask?
     var placeholderImage: UIImage? = UIImage(systemName: "photo.fill")?
         .withTintColor(.lightGray)
         .withRenderingMode(.alwaysOriginal)
         .withConfiguration(UIImage.SymbolConfiguration(pointSize: 15, weight: .ultraLight, scale: .small))
     
+    
+    /// Function to load image asynchronously from memory cache, if not found, tries disk cache, else fetches from server
+    /// - Parameter url: The URL of the image to be loaded.
     func loadImage(from url: URL) {
+        task?.cancel()    // Cancel previous ongoing task if any
+        
         image = placeholderImage
         
-        // Cancel ongoing task if any
-        task?.cancel()
         // Check memory cache
-        if let cachedImage = imageMemoryCache.object(forKey: url.absoluteString as NSString) {
+        if let cachedImage = loadFromMemoryCache(with: url) {
             self.image = cachedImage
             print("Image loaded from memory cache")
             return
         }
         
         // Check disk cache
-        if let cachedImage = loadImageFromDiskCache(with: url) {
+        if let cachedImage = loadFromDiskCache(with: url) {
             // Update memory cache
-            imageMemoryCache.setObject(cachedImage, forKey: url.absoluteString as NSString)
+            saveToMemoryCache(cachedImage, for: url)
             self.image = cachedImage
             print("Image loaded from disk cache")
             return
@@ -64,10 +65,10 @@ class AsyncImageView: UIImageView {
             print("Image loaded from API")
             
             // Update memory cache
-            self.imageMemoryCache.setObject(newImage, forKey: url.absoluteString as NSString)
+            self.saveToMemoryCache(newImage, for: url)
             
             // Save image to disk cache
-            self.saveImageToDiskCache(newImage, with: url)
+            self.saveToDiskCache(newImage, with: url)
             
             DispatchQueue.main.async {
                 self.image = newImage
@@ -75,8 +76,16 @@ class AsyncImageView: UIImageView {
         }
         task?.resume()
     }
+
+    private func loadFromMemoryCache(with url: URL) -> UIImage? {
+        return imageMemoryCache.object(forKey: url.absoluteString as NSString)
+    }
+
+    private func saveToMemoryCache(_ image: UIImage, for url: URL) {
+        imageMemoryCache.setObject(image, forKey: url.absoluteString as NSString)
+    }
     
-    private func loadImageFromDiskCache(with url: URL) -> UIImage? {
+    private func loadFromDiskCache(with url: URL) -> UIImage? {
         let imagePath = imageDiskCacheDirectory.appendingPathComponent(url.pathComponents[2])
         guard let imageData = try? Data(contentsOf: imagePath), let image = UIImage(data: imageData) else {
             return nil
@@ -84,7 +93,7 @@ class AsyncImageView: UIImageView {
         return image
     }
     
-    private func saveImageToDiskCache(_ image: UIImage, with url: URL) {
+    private func saveToDiskCache(_ image: UIImage, with url: URL) {
         let imagePath = imageDiskCacheDirectory.appendingPathComponent(url.pathComponents[2])
         guard let imageData = image.jpegData(compressionQuality: 1.0) else {
             return
