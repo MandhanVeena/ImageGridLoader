@@ -10,6 +10,8 @@ import UIKit
 
 class AsyncImageView: UIImageView {
     
+    let imageCache = NSCache<NSString, UIImage>()
+    
     var task: URLSessionDataTask!
     var placeholderImage: UIImage!
     
@@ -25,11 +27,20 @@ class AsyncImageView: UIImageView {
             task.cancel()
         }
         
+        if let imageFromCache = imageCache.object(forKey: url.absoluteString as NSString) {
+            self.image = imageFromCache
+            print("From cache")
+            return
+        }
+        
         task = URLSession.shared.dataTask(with: url) { data, response, error in
             guard let data = data, let newImage = UIImage(data: data) else {
                 print("Couldn't load image from url: \(url)")
                 return
             }
+            
+            print("From API")
+            self.imageCache.setObject(newImage, forKey: url.absoluteString as NSString)
             
             DispatchQueue.main.async {
                 self.image = newImage
