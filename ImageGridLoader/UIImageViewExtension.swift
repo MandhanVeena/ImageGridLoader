@@ -42,16 +42,15 @@ class AsyncImageView: UIImageView {
         
         // Check memory cache
         if let cachedImage = loadFromMemoryCache(with: url) {
-            self.image = cachedImage
+            displayImage(cachedImage)
             print("Image loaded from memory cache")
             return
         }
         
         // Check disk cache
         if let cachedImage = loadFromDiskCache(with: url) {
-            // Update memory cache
+            displayImage(cachedImage)
             saveToMemoryCache(cachedImage, for: url)
-            self.image = cachedImage
             print("Image loaded from disk cache")
             return
         }
@@ -64,17 +63,21 @@ class AsyncImageView: UIImageView {
             }
             print("Image loaded from API")
             
+            displayImage(newImage)
+            
             // Update memory cache
             self.saveToMemoryCache(newImage, for: url)
             
             // Save image to disk cache
             self.saveToDiskCache(newImage, with: url)
-            
-            DispatchQueue.main.async {
-                self.image = newImage
-            }
         }
         task?.resume()
+    }
+    
+    private func displayImage(_ cachedImage: UIImage) {
+        DispatchQueue.main.async {
+            self.image = cachedImage
+        }
     }
 
     private func loadFromMemoryCache(with url: URL) -> UIImage? {
