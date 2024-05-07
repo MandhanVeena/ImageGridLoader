@@ -19,18 +19,23 @@ class PAThumbnailViewModel {
         }
         
         let task = URLSession.shared.dataTask(with: apiUrl) { [weak self] (data, response, error) in
-            guard let data = data, error == nil else {
-                print("Failed to fetch data: \(error?.localizedDescription ?? "Unknown error")")
+            guard let self = self else { return }
+            
+            if let error = error {
+                print("Failed to fetch data: \(error.localizedDescription)")
+                completion(false)
+                return
+            }
+            
+            guard let data = data else {
+                print("No data received")
                 completion(false)
                 return
             }
             
             do {
-                // Parse JSON response
                 let jsonArray = try JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]]
-                
-                // Extract image URLs from the JSON response
-                self?.extractImageUrls(from: jsonArray)
+                self.extractImageUrls(from: jsonArray)
                 completion(true)
             } catch {
                 print("Error parsing JSON: \(error.localizedDescription)")
