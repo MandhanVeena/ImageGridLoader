@@ -81,8 +81,8 @@ class AsyncImageView: UIImageView {
     // MARK: - Private Methods
     
     private func displayImage(_ cachedImage: UIImage) {
-        DispatchQueue.main.async {
-            self.image = cachedImage
+        DispatchQueue.main.async { [weak self] in
+            self?.image = cachedImage
         }
     }
 

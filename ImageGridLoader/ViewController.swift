@@ -39,8 +39,8 @@ class ViewController: UIViewController {
     
     /// Reload the collection view on the main thread
     private func reload(){
-        DispatchQueue.main.async {
-            self.collectionView.reloadData()
+        DispatchQueue.main.async { [weak self] in
+            self?.collectionView.reloadData()
         }
     }
 }
