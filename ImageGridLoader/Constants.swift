@@ -8,7 +8,7 @@
 import Foundation
 
 /// Spacing between and around grid cells
-let gridSpacing: CGFloat = 5
+let gridSpacing: CGFloat = 6
 
 /// Number of items to fetch from API
 let limit: Int = 300

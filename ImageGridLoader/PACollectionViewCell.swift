@@ -22,7 +22,7 @@ class PACollectionViewCell: UICollectionViewCell {
     private func setupImageView() {
         imageView.layer.borderWidth = 1.0
         imageView.layer.borderColor = UIColor.gray.cgColor
-        imageView.layer.cornerRadius = 5.0
+        imageView.layer.cornerRadius = 4.0
         imageView.layer.masksToBounds = true
     }
 

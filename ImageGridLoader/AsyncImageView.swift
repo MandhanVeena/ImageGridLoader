@@ -27,7 +27,7 @@ class AsyncImageView: UIImageView {
         return directoryURL
     }()
     
-    var placeholderImage: UIImage? = UIImage(systemName: "photo.fill")?
+    var placeholderImage: UIImage? = UIImage(systemName: "photo.circle")?
         .withTintColor(.lightGray)
         .withRenderingMode(.alwaysOriginal)
         .withConfiguration(UIImage.SymbolConfiguration(pointSize: 15, weight: .ultraLight, scale: .small))
@@ -38,14 +38,14 @@ class AsyncImageView: UIImageView {
     /// Function to load image asynchronously from memory cache, if not found, tries disk cache, else fetches from server
     /// - Parameter url: The URL of the image to be loaded.
     func loadImage(from url: URL) {
-        task?.cancel()    // Cancel previous ongoing task if any
-        
         image = placeholderImage
+        
+        task?.cancel()    // Cancel previous ongoing task if any
         
         // Check memory cache
         if let cachedImage = loadFromMemoryCache(with: url) {
             displayImage(cachedImage)
-            print("Image loaded from memory cache")
+            print("Image loaded from ---- Memory cache")
             return
         }
         
@@ -53,7 +53,7 @@ class AsyncImageView: UIImageView {
         if let cachedImage = loadFromDiskCache(with: url) {
             displayImage(cachedImage)
             saveToMemoryCache(cachedImage, for: url)
-            print("Image loaded from disk cache")
+            print("Image loaded from ---- Disk cache")
             return
         }
         
@@ -63,7 +63,7 @@ class AsyncImageView: UIImageView {
                 print("Error loading image from url: \(url), error: \(error?.localizedDescription ?? "Unknown error")")
                 return
             }
-            print("Image loaded from URL")
+            print("Image loaded from ---- URL")
             
             displayImage(newImage)
             
