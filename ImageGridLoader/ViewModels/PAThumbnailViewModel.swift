@@ -11,7 +11,7 @@ import UIKit
 class PAThumbnailViewModel {
     var imageUrls = [String]()
     
-    func fetchImageData(completion: @escaping (Bool) -> Void) {
+    func fetchThumbnailData(completion: @escaping (Bool) -> Void) {
         guard let apiUrl = URL(string: apiUrlString) else {
             print("Invalid API URL")
             completion(false)

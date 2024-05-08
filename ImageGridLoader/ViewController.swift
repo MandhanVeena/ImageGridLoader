@@ -18,7 +18,8 @@ class ViewController: UIViewController {
         
         setupCollectionView()
         
-        thumbnailViewModel.fetchImageData() { [weak self] success in
+        // Fetch image data
+        thumbnailViewModel.fetchThumbnailData() { [weak self] success in
             switch(success) {
             case true:
                 self?.reload()
@@ -26,26 +27,26 @@ class ViewController: UIViewController {
                 break
             }
         }
-        
     }
     
-    func setupCollectionView(){
+    // MARK: - Collection View Setup
+    
+    private func setupCollectionView(){
         collectionView.register(PACollectionViewCell.nib(), forCellWithReuseIdentifier: PACollectionViewCell.identifier)
         collectionView.delegate = self
         collectionView.dataSource = self
     }
     
-    func reload(){
-        // Reload the collection view on the main thread
+    /// Reload the collection view on the main thread
+    private func reload(){
         DispatchQueue.main.async {
             self.collectionView.reloadData()
         }
     }
 }
 
-extension ViewController: UICollectionViewDelegate {
-    //ToDo: Remove if not needed
-}
+
+// MARK: - ViewController Extensions for CollectionView
 
 extension ViewController: UICollectionViewDataSource {
     
@@ -58,24 +59,24 @@ extension ViewController: UICollectionViewDataSource {
         cell.configure(with: thumbnailViewModel.imageUrls[indexPath.item])
         return cell
     }
-    
 }
 
 extension ViewController: UICollectionViewDelegateFlowLayout {
-    //ToDo: Constant for cell spacing
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: (view.frame.size.width - 20)/3, height: (view.frame.size.width - 20)/3)
+        let cellWidth = (view.frame.size.width - gridSpacing * 4) / 3
+        return CGSize(width: cellWidth, height: cellWidth)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 5
+        return gridSpacing
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 5
+        return gridSpacing
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
+        return UIEdgeInsets(top: gridSpacing, left: gridSpacing, bottom: gridSpacing, right: gridSpacing)
     }
 }
