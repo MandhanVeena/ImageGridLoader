@@ -17,7 +17,7 @@
 		166139C92BE95E3C00ACEE66 /* PAThumbnailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166139C82BE95E3C00ACEE66 /* PAThumbnailViewModel.swift */; };
 		166139CC2BE961D700ACEE66 /* PACollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 166139CB2BE961D700ACEE66 /* PACollectionViewCell.xib */; };
 		166139CD2BE961D700ACEE66 /* PACollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166139CA2BE961D700ACEE66 /* PACollectionViewCell.swift */; };
-		166139CF2BE9811D00ACEE66 /* UIImageViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166139CE2BE9811D00ACEE66 /* UIImageViewExtension.swift */; };
+		166139CF2BE9811D00ACEE66 /* AsyncImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166139CE2BE9811D00ACEE66 /* AsyncImageView.swift */; };
 		16A7625F2BE81F2300432C10 /* PAThumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A7625E2BE81F2300432C10 /* PAThumbnail.swift */; };
 /* End PBXBuildFile section */
 
@@ -34,7 +34,7 @@
 		166139C82BE95E3C00ACEE66 /* PAThumbnailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PAThumbnailViewModel.swift; sourceTree = "<group>"; };
 		166139CA2BE961D700ACEE66 /* PACollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PACollectionViewCell.swift; sourceTree = "<group>"; };
 		166139CB2BE961D700ACEE66 /* PACollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PACollectionViewCell.xib; sourceTree = "<group>"; };
-		166139CE2BE9811D00ACEE66 /* UIImageViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageViewExtension.swift; sourceTree = "<group>"; };
+		166139CE2BE9811D00ACEE66 /* AsyncImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncImageView.swift; sourceTree = "<group>"; };
 		16A7625E2BE81F2300432C10 /* PAThumbnail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PAThumbnail.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -76,7 +76,7 @@
 				1656F9F32BE7E4990060011E /* ViewController.swift */,
 				166139CA2BE961D700ACEE66 /* PACollectionViewCell.swift */,
 				166139CB2BE961D700ACEE66 /* PACollectionViewCell.xib */,
-				166139CE2BE9811D00ACEE66 /* UIImageViewExtension.swift */,
+				166139CE2BE9811D00ACEE66 /* AsyncImageView.swift */,
 				1656F9F52BE7E4990060011E /* Main.storyboard */,
 				1656F9F82BE7E49A0060011E /* Assets.xcassets */,
 				1656F9FA2BE7E49A0060011E /* LaunchScreen.storyboard */,
@@ -176,7 +176,7 @@
 				1656F9F42BE7E4990060011E /* ViewController.swift in Sources */,
 				1656F9F02BE7E4990060011E /* AppDelegate.swift in Sources */,
 				1656F9F22BE7E4990060011E /* SceneDelegate.swift in Sources */,
-				166139CF2BE9811D00ACEE66 /* UIImageViewExtension.swift in Sources */,
+				166139CF2BE9811D00ACEE66 /* AsyncImageView.swift in Sources */,
 				166139C62BE9442D00ACEE66 /* Constants.swift in Sources */,
 				166139CD2BE961D700ACEE66 /* PACollectionViewCell.swift in Sources */,
 				16A7625F2BE81F2300432C10 /* PAThumbnail.swift in Sources */,
