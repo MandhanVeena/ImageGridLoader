@@ -8,9 +8,7 @@
 import UIKit
 
 class ViewController: UIViewController {
-    
-    //ToDo: Added a header above the grids to cover some space, so that lazy loading can be represented clearly
-    
+
     @IBOutlet var collectionView: UICollectionView!
     
     let thumbnailViewModel = PAThumbnailViewModel()
