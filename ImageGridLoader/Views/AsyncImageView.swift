@@ -13,18 +13,20 @@ class AsyncImageView: UIImageView {
     
     private let imageMemoryCache = NSCache<NSString, UIImage>()
     
-    private let imageDiskCacheDirectory: URL = {
+    private let imageDiskCacheDirectory: URL? = {
         guard let cacheDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first else {
-            fatalError("Unable to access cache directory")
+            print("Unable to access cache directory")
+            return nil
         }
         let directoryURL = cacheDirectory.appendingPathComponent("PAImageCache")
         
         do {
             try FileManager.default.createDirectory(at: directoryURL, withIntermediateDirectories: true, attributes: nil)
+            return directoryURL
         } catch {
-            fatalError("Error creating cache directory: \(error.localizedDescription)")
+            print("Error creating cache directory: \(error.localizedDescription)")
+            return nil
         }
-        return directoryURL
     }()
     
     var placeholderImage: UIImage? = UIImage(systemName: "photo.circle")?
@@ -59,8 +61,9 @@ class AsyncImageView: UIImageView {
         
         // Fetch image from URL
         task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-            guard let self = self, let data = data, let newImage = UIImage(data: data) else {
-//                print("Error loading image from url: \(url), error: \(error?.localizedDescription ?? "Unknown error")")
+            guard let self = self, let data = data,
+                    let newImage = UIImage(data: data) else {
+                print("Error loading image from url: \(url), error: \(error?.localizedDescription ?? "Unknown error")")
                 return
             }
             print("Image loaded from ---- URL")
@@ -94,16 +97,17 @@ class AsyncImageView: UIImageView {
     
     
     private func loadFromDiskCache(with url: URL) -> UIImage? {
-        let imagePath = imageDiskCacheDirectory.appendingPathComponent(url.pathComponents[2])
-        guard let imageData = try? Data(contentsOf: imagePath), let image = UIImage(data: imageData) else {
+        guard let imagePath = imageDiskCacheDirectory?.appendingPathComponent(url.pathComponents[2]), 
+                let imageData = try? Data(contentsOf: imagePath), 
+                let image = UIImage(data: imageData) else {
             return nil
         }
         return image
     }
     
     private func saveToDiskCache(_ image: UIImage, with url: URL) {
-        let imagePath = imageDiskCacheDirectory.appendingPathComponent(url.pathComponents[2])
-        guard let imageData = image.jpegData(compressionQuality: 1.0) else {
+        guard let imagePath = imageDiskCacheDirectory?.appendingPathComponent(url.pathComponents[2]),
+                let imageData = image.jpegData(compressionQuality: 1.0) else {
             return
         }
         do {
