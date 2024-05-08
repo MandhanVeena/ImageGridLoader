@@ -7,9 +7,10 @@
 
 import Foundation
 
-//ToDo: Move Strings to constants, and create classes or structs if safe
+/// Spacing between and around grid cells
+let gridSpacing: CGFloat = 5
 
-let apiUrlString = "https://acharyaprashant.org/api/v2/content/misc/media-coverages?limit=390"
-//ToDo: Set limit to 100 after testing
+/// Number of items to fetch from API
+let limit: Int = 300
 
-let gridSpacing: CGFloat = 5   //Spacing between and around grid cells
+let apiUrlString = "https://acharyaprashant.org/api/v2/content/misc/media-coverages?limit=\(limit)"
