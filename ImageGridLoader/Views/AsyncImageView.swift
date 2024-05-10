@@ -42,9 +42,9 @@ class AsyncImageView: UIImageView {
     /// Function to load image asynchronously from memory cache, if not found, tries disk cache, else fetches from server
     /// - Parameter url: The URL of the image to be loaded.
     func loadImage(from url: URL) {
-        image = placeholderImage
-        
         currentBasePath = url.pathComponents[2]
+        
+        image = placeholderImage
         
         task?.cancel()    // Cancel previous ongoing task if any
         
