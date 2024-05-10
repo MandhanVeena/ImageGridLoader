@@ -11,6 +11,6 @@ import Foundation
 let gridSpacing: CGFloat = 6
 
 /// Number of items to fetch from API
-let limit: Int = 300
+let limit: Int = 100
 
 let apiUrlString = "https://acharyaprashant.org/api/v2/content/misc/media-coverages?limit=\(limit)"
