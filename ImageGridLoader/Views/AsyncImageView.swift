@@ -11,6 +11,8 @@ class AsyncImageView: UIImageView {
     /// Data task to fetch the image from specified URL asynchronously.
     private var task: URLSessionDataTask?
     
+    private var currentBasePath: String?
+    
     private let imageMemoryCache = NSCache<NSString, UIImage>()
     
     private let imageDiskCacheDirectory: URL? = {
@@ -42,18 +44,20 @@ class AsyncImageView: UIImageView {
     func loadImage(from url: URL) {
         image = placeholderImage
         
+        currentBasePath = url.pathComponents[2]
+        
         task?.cancel()    // Cancel previous ongoing task if any
         
         // Check memory cache
         if let cachedImage = loadFromMemoryCache(with: url) {
-            displayImage(cachedImage)
+            displayImage(cachedImage, forURL: url)
             print("Image loaded from ---- Memory cache")
             return
         }
         
         // Check disk cache
         if let cachedImage = loadFromDiskCache(with: url) {
-            displayImage(cachedImage)
+            displayImage(cachedImage, forURL: url)
             saveToMemoryCache(cachedImage, for: url)
             print("Image loaded from ---- Disk cache")
             return
@@ -68,7 +72,7 @@ class AsyncImageView: UIImageView {
             }
             print("Image loaded from ---- URL")
             
-            displayImage(newImage)
+            displayImage(newImage, forURL: url)
             
             self.saveToMemoryCache(newImage, for: url)
             
@@ -80,9 +84,11 @@ class AsyncImageView: UIImageView {
     
     // MARK: - Private Methods
     
-    private func displayImage(_ cachedImage: UIImage) {
+    private func displayImage(_ cachedImage: UIImage, forURL url: URL) {
         DispatchQueue.main.async { [weak self] in
-            self?.image = cachedImage
+            if self?.currentBasePath == url.pathComponents[2] {
+                self?.image = cachedImage
+            }
         }
     }
 
